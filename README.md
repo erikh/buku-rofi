@@ -4,7 +4,7 @@
 ![Screenshot](https://gitlab.com/lbcnz/buku-rofi/-/raw/master/screenshot.png)
 
 # Setup
-Run `make install` or install through AUR or PKGBUILD.
+Run `make install` or install through [AUR](https://aur.archlinux.org/packages/buku-rofi-git/) or makepkg.
 
 # How-to
 Run `buku-rofi`
