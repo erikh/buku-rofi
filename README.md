@@ -7,3 +7,5 @@ Run `make install` or install through AUR or PKGBUILD.
 # How-to
 Run `buku-rofi`
 
+[!Screenshot](https://gitlab.com/lbcnz/buku-rofi/screenshot.png)
+
