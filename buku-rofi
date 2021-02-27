@@ -212,7 +212,7 @@ addTags () {
 }
 
 parseBuku () {
-  buku --nc --np -p --tacit | gawk -v max="80" -v type="1" '
+  buku --nc --np -p --tacit | gawk -v max="80" -v type="3" '
 BEGIN {
   RS=""
   FS="\n"
