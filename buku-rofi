@@ -19,7 +19,7 @@
 #
 
 _rofi () {
-    rofi -dmenu -i -sort -no-levenshtein-sort -width 1300 -lines 40 "$@"
+    rofi -dpi 1 -dmenu -i -sort -no-levenshtein-sort -width 1300 -lines 40 "$@"
 }
 
 # display settings
@@ -38,7 +38,7 @@ main () {
         content=$(parseBuku)
         menu=$(_rofi -p '> ' -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}" -kb-custom-4 "${edit}" -kb-custom-5 "${delete}" <<< "${content}")
     elif [[ $mode == "tags" ]]; then
-        menu=$(buku --np --st | gawk '{$NF=""; print $0}' | cut -d ' ' -f2-  | _rofi -p '> ' -mesg "${HELP}" -kb-custom-2 "${switch_view}" -kb-custom-4 "${edit}" -kb-custom-5 "${delete}")
+        menu=$(buku --nostdin --np --st 2>/dev/null | grep -v -- "--nostdin" | gawk '{$NF=""; print $0}' | cut -d ' ' -f2-  | _rofi -p '> ' -mesg "${HELP}" -kb-custom-2 "${switch_view}" -kb-custom-4 "${edit}" -kb-custom-5 "${delete}")
     fi
     val=$?
     if [[ $val -eq 1 ]]; then
@@ -197,22 +197,22 @@ addMark () {
 }
 
 addTags () {
-    inserttags=$(buku --np --st | gawk '{$NF=""; print $0}' | cut -d ' ' -f2- | _rofi -p '> ' -mesg "Add some tags. Separate tags with ', '")
+    inserttags=$(buku --np --st --nostdin 2>/dev/null | grep -v -- "--nostdin" | gawk '{$NF=""; print $0}' | cut -d ' ' -f2- | _rofi -p '> ' -mesg "Add some tags. Separate tags with ', '")
     val=$?
     if [[ $val -eq 1 ]]; then
         exit
     elif [[ $val -eq 0 ]]; then
         taglist="$(tr '\n' ',' <<< "${inserttags}")"
         if [[ $1 == "--update" ]]; then
-            buku -u "${id}" --tag "${taglist}"
+            buku -u "${id}" --tag "${taglist}" </dev/null
         else
-            buku -a "${inserturl}" "${taglist}"
+            buku -a "${inserturl}" "${taglist}" </dev/null
         fi
     fi
 }
 
 parseBuku () {
-  buku --nc --np -p --tacit | gawk -v max="80" -v type="3" '
+  buku --nc --np -p --tacit --nostdin 2>/dev/null | grep -v -- "--nostdin" | gawk -v max="80" -v type="3" '
 BEGIN {
   RS=""
   FS="\n"
@@ -261,7 +261,7 @@ getId () {
 }
 
 getMetaData () {
-  buku --nc -p "$1"
+  buku --nc --np --nostdin -p "$1" 2>/dev/null | grep -v -- "--nostdin"
 }
 
 getTitleFromId () {
